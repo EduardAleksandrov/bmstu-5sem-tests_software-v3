@@ -250,8 +250,16 @@ int main() {
         std::cout << "2. Continue Game" << std::endl;
         std::cout << "3. Exit" << std::endl;
         std::cout << "Choose an option: ";
-        std::cin >> choice;
-        std::cin.get(); // символ перевода строки, получение, для дальнейшей работы cin
+
+        // Проверка ввода
+        if (!(std::cin >> choice)) {
+            std::cout << "Invalid input. Please enter a number." << std::endl;
+            std::cin.clear(); // Сброс состояния потока
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Очистка буфера ввода
+            continue; // Возврат к началу цикла
+        }
+
+        std::cin.get(); // Получение символа перевода строки, если необходимо
 
         switch (choice) {
             case 1:
