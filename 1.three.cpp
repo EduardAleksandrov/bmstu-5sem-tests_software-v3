@@ -154,25 +154,36 @@ void processTurn(GameState& state) {
         }
 
         // Проверка на победу
-        bool player1Won = true;
-        bool player2Won = true;
+        int player1Ships = 0, player2Ships = 0;
+        int player1ShipsOne = 0, player2ShipsTwo = 0;
 
         for (int i = 0; i < SIZE; ++i) {
             for (int j = 0; j < SIZE; ++j) {
-                if (state.player1Board[i][j] == SHIP) {
-                    player1Won = false;
+                if (state.player1Shots[i][j] == HIT) {
+                    player1Ships++;
                 }
-                if (state.player2Board[i][j] == SHIP) {
-                    player2Won = false;
+                if (state.player2Shots[i][j] == HIT) {
+                    player2Ships++;
                 }
             }
         }
 
-        if (player1Won) {
+        for (int i = 0; i < SIZE; ++i) {
+            for (int j = 0; j < SIZE; ++j) {
+                if (state.player1Board[i][j] == SHIP) {
+                    player1ShipsOne++;
+                }
+                if (state.player2Board[i][j] == SHIP) {
+                    player2ShipsTwo++;
+                }
+            }
+        }
+
+        if (player1Ships == player1ShipsOne) {
             std::cout << "Player 2 wins!" << std::endl;
             return;
         }
-        if (player2Won) {
+        if (player2Ships == player2ShipsTwo) {
             std::cout << "Player 1 wins!" << std::endl;
             return;
         }
