@@ -1,5 +1,5 @@
 /*
-    с сохранением без прерывания программы работает
+    с сохранением с прерыванием программы работает
 */
 #include <iostream>
 #include <vector>
@@ -62,7 +62,7 @@ bool isGameOver(const GameState& state, int& who, int flag) {
         }
     } else {
         if (player1Ships == player1ShipsOne) {
-        who = 2; // Игрок 2 выигрывает
+            who = 2; // Игрок 2 выигрывает
         return true;
         }
         if (player2Ships == player2ShipsTwo) {
@@ -185,6 +185,9 @@ bool loadSavedGame(GameState& state, std::set<std::pair<int, int>>& player1Shots
 }
 
 std::pair<int, int> getRandomShot(const std::set<std::pair<int, int>>& previousShots) {
+    if (previousShots.size() >= SIZE * SIZE) {
+        throw std::runtime_error("No available shots left.");
+    }
     int x, y;
     do {
         x = rand() % SIZE;
@@ -233,42 +236,56 @@ void runIntegrationTest() {
     std::set<std::pair<int, int>> player1Shots; // Множество ударенных точек
     std::set<std::pair<int, int>> player2Shots;
 
+    std::cout << "Продолжить игру? 1.Да, 2.Нет" << std::endl;
+    int contin;
+    std::cin >> contin;
+    if(contin != 1 && contin != 2) return;
+
+    int cont;
+
     int who = 0;
     int flag = 1; // флаг для половины и продолжения игры
-    while (true) {
-        botShoot(state, state.currentPlayer == 1 ? player1Shots : player2Shots);
-        
-        // Проверка на затопление половины кораблей
-        if (who == 1 || who == 2) {
-            std::cout << "Game Over! Player " << who << " wins! " << "Steps: " << state.turnCount << std::endl;
-
-            saveGame_t(state, player1Shots, player2Shots); // Сохранение состояния игры
-            break; // Завершение игры
-        }
-        isGameOver(state, who, flag);
-    }
     
-    // Проверка, нужно ли продолжить игру
-    std::cout << "Продолжить игру? 1.Да, 2.Нет" << std::endl;
-    int cont;
-    std::cin >> cont;
-    if(cont != 1) return;
+    if(contin == 2)
+    {
+        while (true) {
+            botShoot(state, state.currentPlayer == 1 ? player1Shots : player2Shots);
+            
+            // Проверка на затопление половины кораблей
+            if (who == 1 || who == 2) {
+                std::cout << "Game Over! Player " << who << " wins! " << "Steps: " << state.turnCount << std::endl;
+
+                saveGame_t(state, player1Shots, player2Shots); // Сохранение состояния игры
+                break; // Завершение игры
+            }
+            isGameOver(state, who, flag);
+        }
+        // Проверка, нужно ли продолжить игру
+        std::cout << "Продолжить эту игру? 1.Да, 2.Нет" << std::endl;
+        std::cin >> cont;
+        if(cont != 1) return;
+    }
 
     // продолжение
     int whos = 0;
     flag = 2;
-    if (who == 1 || who == 2) {
+
+    if(contin == 1 || cont == 1)
+    {
         std::cout << "Continuing the saved game..." << std::endl;
         if (loadSavedGame(state, player1Shots, player2Shots)) {
             // Продолжение игры
             while (!isGameOver(state, whos, flag)) {
                 botShoot(state, state.currentPlayer == 1 ? player1Shots : player2Shots);
+                std::cout << whos << std::endl;
             }
             std::cout << "Game Over! Player " << whos << " wins! " << "Steps: " << state.turnCount << std::endl;
+
         } else {
             std::cerr << "Failed to load the saved game." << std::endl;
         }
     }
+    
 }
 
 int main() {

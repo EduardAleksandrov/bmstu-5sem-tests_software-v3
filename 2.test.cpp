@@ -1,3 +1,7 @@
+/*
+    Тест без остановки
+*/
+
 #include <iostream>
 #include <vector>
 #include <cstdlib> // rand
