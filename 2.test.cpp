@@ -1,10 +1,10 @@
 #include <iostream>
 #include <vector>
-#include <cstdlib>
+#include <cstdlib> // rand
 #include <ctime>
 #include <set>
-#include <utility>
-#include <tuple>
+#include <utility> // pair
+#include <tuple> // tie
 
 #include "three.hpp"
 
@@ -14,6 +14,7 @@ void initializeGame(GameState& state) {
     state.player1Shots.resize(SIZE, std::vector<char>(SIZE, EMPTY));
     state.player2Shots.resize(SIZE, std::vector<char>(SIZE, EMPTY));
     state.currentPlayer = 1;
+    state.turnCount = 0;
 }
 
 bool isGameOver(const GameState& state, int& who) {
@@ -43,6 +44,7 @@ bool isGameOver(const GameState& state, int& who) {
     }
     if(player2Ships == player2ShipsTwo) who = 1;
     else who = 2;
+
     std::cout << "Player 1 ships remaining: " << player1Ships << std::endl;
     std::cout << "Player 2 ships remaining: " << player2Ships << std::endl;
 
@@ -54,14 +56,16 @@ std::pair<int, int> getRandomShot(const std::set<std::pair<int, int>>& previousS
     do {
         x = rand() % SIZE;
         y = rand() % SIZE;
-    } while (previousShots.count({x, y}) > 0);
+    } while (previousShots.count({x, y}) > 0); // если 1, то такое значение уже есть, крутим дальше
     return {x, y};
 }
 
 void botShoot(GameState& state, std::set<std::pair<int, int>>& previousShots) {
     int x, y;
-    std::tie(x, y) = getRandomShot(previousShots);
+    std::tie(x, y) = getRandomShot(previousShots); // распаковка возврата функции
     previousShots.insert({x, y});
+
+    state.turnCount++;
 
     if (state.currentPlayer == 1) {
         if (state.player2Board[x][y] == SHIP) {
@@ -114,6 +118,7 @@ void runIntegrationTest() {
     } else {
         std::cout << "Player 2 wins!" << std::endl;
     }
+    std::cout << "Всего шагов: " << state.turnCount << std::endl;
 }
 
 int main() {

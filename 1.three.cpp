@@ -13,7 +13,7 @@ const char MISS = 'O';
 struct GameState {
     std::vector<std::vector<char>> player1Board;
     std::vector<std::vector<char>> player2Board;
-    std::vector<std::vector<char>> player1Shots;
+    std::vector<std::vector<char>> player1Shots; // добавлены, чтобы не затирались
     std::vector<std::vector<char>> player2Shots;
     int currentPlayer;
     int turnCount;
@@ -226,7 +226,7 @@ void continueGame(GameState& state) {
         std::string turnCountStr, currentPlayerStr;
         std::getline(file1, turnCountStr);
         std::getline(file1, currentPlayerStr);
-        state.turnCount = std::stoi(turnCountStr);
+        state.turnCount = std::stoi(turnCountStr); // из строки в int
         state.currentPlayer = std::stoi(currentPlayerStr);
 
         file1.close();
