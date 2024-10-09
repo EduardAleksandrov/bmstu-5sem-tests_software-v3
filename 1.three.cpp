@@ -1,3 +1,6 @@
+/*
+    Игра морской бой
+*/
 #include <iostream>
 #include <fstream>
 #include <vector>

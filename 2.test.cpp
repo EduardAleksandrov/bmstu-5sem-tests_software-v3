@@ -45,8 +45,8 @@ bool isGameOver(const GameState& state, int& who) {
     if(player2Ships == player2ShipsTwo) who = 1;
     else who = 2;
 
-    std::cout << "Player 1 ships remaining: " << player1Ships << std::endl;
-    std::cout << "Player 2 ships remaining: " << player2Ships << std::endl;
+    std::cout << "Player 1 ships потоплено: " << player1Ships << std::endl;
+    std::cout << "Player 2 ships потоплено: " << player2Ships << std::endl;
 
     return player1Ships == player1ShipsOne || player2Ships == player2ShipsTwo;
 }
