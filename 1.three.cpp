@@ -39,9 +39,11 @@ void loadBoard(const std::string& filename, std::vector<std::vector<char>>& boar
 }
 
 void saveGame(const GameState& state) {
-    std::ofstream file1("lastgame_player_1.cfg");
-    std::ofstream file2("lastgame_player_2.cfg");
-    std::ofstream file3("lastgame.cfg");
+    std::ofstream file1("lastgame_player_1.cfg", std::ios::out);
+    std::ofstream file2("lastgame_player_2.cfg", std::ios::out);
+    std::ofstream file3("lastgame.cfg", std::ios::out);
+    std::ofstream file4("lastgame_shots_player_1.cfg", std::ios::out);
+    std::ofstream file5("lastgame_shots_player_2.cfg", std::ios::out);
 
     for (const auto& row : state.player1Board) {
         for (char cell : row) {
@@ -60,9 +62,25 @@ void saveGame(const GameState& state) {
     file3 << state.turnCount << std::endl;
     file3 << state.currentPlayer << std::endl;
 
+    for (const auto& row : state.player1Shots) {
+        for (char cell : row) {
+            file4 << cell;
+        }
+        file4 << std::endl;
+    }
+
+    for (const auto& row : state.player2Shots) {
+        for (char cell : row) {
+            file5 << cell;
+        }
+        file5 << std::endl;
+    }
+
     file1.close();
     file2.close();
     file3.close();
+    file4.close();
+    file5.close();
 }
 
 void printBoard(const std::vector<std::vector<char>>& board, const std::string& title) {
@@ -184,32 +202,21 @@ void continueGame(GameState& state) {
     state.player1Shots.resize(SIZE, std::vector<char>(SIZE, EMPTY));
     state.player2Shots.resize(SIZE, std::vector<char>(SIZE, EMPTY));
 
-    std::ifstream file1("lastgame_player_1.cfg");
-    std::ifstream file2("lastgame_player_2.cfg");
-    std::ifstream file3("lastgame.cfg");
+    std::ifstream file1("lastgame.cfg");
 
-    if (file1.is_open() && file2.is_open() && file3.is_open()) {
-        for (int i = 0; i < SIZE; ++i) {
-            std::string line;
-            std::getline(file1, line);
-            state.player1Board.push_back(std::vector<char>(line.begin(), line.end()));
-        }
+    loadBoard("./lastgame_player_1.cfg", state.player1Board);
+    loadBoard("./lastgame_player_2.cfg", state.player2Board);
+    loadBoard("./lastgame_shots_player_1.cfg", state.player1Shots);
+    loadBoard("./lastgame_shots_player_2.cfg", state.player2Shots);
 
-        for (int i = 0; i < SIZE; ++i) {
-            std::string line;
-            std::getline(file2, line);
-            state.player2Board.push_back(std::vector<char>(line.begin(), line.end()));
-        }
-
+    if (file1.is_open()) {
         std::string turnCountStr, currentPlayerStr;
-        std::getline(file3, turnCountStr);
-        std::getline(file3, currentPlayerStr);
+        std::getline(file1, turnCountStr);
+        std::getline(file1, currentPlayerStr);
         state.turnCount = std::stoi(turnCountStr);
         state.currentPlayer = std::stoi(currentPlayerStr);
 
         file1.close();
-        file2.close();
-        file3.close();
 
         std::cout << "Game continued!" << std::endl;
         processTurn(state);
@@ -228,6 +235,7 @@ int main() {
         std::cout << "3. Exit" << std::endl;
         std::cout << "Choose an option: ";
         std::cin >> choice;
+        std::cin.get(); // символ перевода строки, получение, для дальнейшей работы cin
 
         switch (choice) {
             case 1:
