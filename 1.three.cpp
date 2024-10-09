@@ -121,6 +121,8 @@ void processTurn(GameState& state) {
         x = input[1] - '1';
         y = input[0] - 'a';
 
+        state.turnCount++; // количество шагов
+
         if (state.currentPlayer == 1) {
             if (state.player2Shots[x][y] != EMPTY) {
                 std::cout << "You have already shot here. Try again." << std::endl;
