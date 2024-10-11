@@ -1,8 +1,8 @@
 
-run_1.one:
+run_1.three:
 	g++ -std=c++17 ./1.three.cpp -o ./build/1.three -g && ./build/1.three
 
-run_1.2.one:
+run_1.2.three:
 	g++ -std=c++17 ./1.2.three.cpp -o ./build/1.2.three -g && ./build/1.2.three
 
 run_test2:
