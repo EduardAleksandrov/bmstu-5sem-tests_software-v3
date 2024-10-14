@@ -5,6 +5,10 @@ run_1.three:
 run_1.2.three:
 	g++ -std=c++17 ./1.2.three.cpp -o ./build/1.2.three -g && ./build/1.2.three
 
+run_5.five:
+	g++ -std=c++17 ./5.five.cpp -o ./build/5.five -g && ./build/5.five
+
+
 run_test2:
 	g++ -std=c++17 ./2.test.cpp -o ./build/2.test -g && ./build/2.test
 
