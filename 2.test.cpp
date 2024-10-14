@@ -10,7 +10,7 @@
 #include <utility> // pair
 #include <tuple> // tie
 
-#include "three.hpp"
+#include "3.three.hpp"
 
 void initializeGame(GameState& state) {
     state.player1Board.resize(SIZE, std::vector<char>(SIZE, EMPTY));
