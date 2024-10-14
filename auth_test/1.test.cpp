@@ -1,8 +1,8 @@
 /*
-
+    Тестирование авторизации
+    Работает
+    К показу
 */
-
-
 #define BOOST_TEST_MODULE MyTestModule
 #include <iostream>
 #include <gmock/gmock.h>
